@@ -1,0 +1,28 @@
+.PHONY: all clean
+
+all: procesy.x kopiuj.x lider.x
+
+procinfo.o: procinfo.c procinfo.h
+procesy.o: procesy.c procinfo.h
+procesy.x: procesy.o procinfo.o
+kopiuj.o: kopiuj.c
+kopiuj.x: kopiuj.o 
+lider.o:lider.c procinfo.h
+lider.x:lider.o procinfo.o
+main.o: main.c procinfo.h
+main.x: main.o procinfo.o
+
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+%.x: %.o
+	$(CC) $(LDFLAGS) -o $@ $^
+
+clean:
+	$(RM) *.o *.x
+
+
+
+
+
