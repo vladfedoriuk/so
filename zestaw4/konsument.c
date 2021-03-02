@@ -1,0 +1,36 @@
+#include<stdio.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<stdlib.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<fcntl.h>
+#include<limits.h>
+#include<string.h>
+
+int main(int argc, char* argv[]){
+int nr=0;
+char buf[PIPE_BUF];
+int fd;
+if((fd=open(argv[1],O_RDONLY|O_CREAT,0666))==-1){
+             perror("Nie udalo sie otworzyc potok do czytania");
+             exit(EXIT_FAILURE);
+           }
+        FILE* f2;
+           if((f2=fopen("schowek.txt","w"))==NULL){
+             perror("Nie udalo sie otworzyc plik do zapisywania");
+             exit(EXIT_FAILURE);
+           }
+        printf("Czytam\n");
+        while((nr=read(fd,buf,sizeof(buf)))>0){
+          if(nr==-1){
+            perror("Read error");
+            exit(EXIT_FAILURE);
+          }
+         fputs(buf,f2);
+         printf("%s\n",buf);
+        }
+        printf("end of reading from pipe\n");
+        fclose(f2);
+  return 0;
+}

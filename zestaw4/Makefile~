@@ -1,0 +1,25 @@
+.PHONY: all clean
+
+all: prodkons.x fifo.x producent.x
+
+prodkons.o:prodkons.c
+prodkons.x:prodkons.o
+fifo.o:fifo.c
+fifo.x:fifo.o
+producent.o:producent.c
+producent.x:producent.o
+konsument.o:konsument.c
+konsument.x:konsument.o
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+#laczy wszystkie .o w jeden plik wykonywalny
+%.x: %.o 
+	$(CC) $(LDFLAGS) -o $@ $^
+
+clean:
+	$(RM) *.o *.x 
+
+
+
