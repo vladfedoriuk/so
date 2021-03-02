@@ -1,0 +1,27 @@
+#ifndef LIBMSG_H
+#define LIBMSG_H
+
+#include<sys/types.h>
+#include<sys/ipc.h>
+#include<sys/msg.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include"pthread.h"
+#include<sys/stat.h>
+
+#define BUFSIZE 32
+#define SERVER 1L
+
+typedef struct{
+   long msg_to;
+   long msg_from;
+   char buffer[BUFSIZE];
+} MESSAGE;
+
+    int msgCreate(int id);// Tworzy kolejkę komunikatów. Klucz można utworzyć używając ftok(".", id). Funkcja zwraca identyfikator kolejki komunikatów.
+    void msgRm(int msgid);// Usuwa kolejkę komunikatów o identyfikatorze msgid.
+    void msgSend(int msgid, MESSAGE *msg);//Wysyła komunikat wskazywany przez msg do kolejki o identyfikatorze msgid. Stworzyć własny typ danych komunikat zgodny ze strukturą msgbuf.
+    void msgRecv(int msgid, MESSAGE *msg, int mtype);//Odbiera z kolejki msgid komunikat typu mtype i zapisuje do msg.
+    void msgInfo(int msgid);//Wypisuje informacje o kolejce komunikatów. Proszę użyć funkcji systemowej msgctl z komendą IPC_STAT.
+
+#endif

@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+#include<fcntl.h>
+#include<sys/stat.h>
+#include<semaphore.h>
+#include"libsem.h"
+
+semid semOpen(const char *name){
+  semid try = sem_open(name,O_CREAT|O_EXCL);
+  if(try == SEM_FAILED){
+      perror("sem_open err\n");
+      exit(0);
+   } else
+      return try;
+}
+
+void semInit(semid sem, int val){
+ int try =  sem_init(sem,0,value);
+ if(try==-1){
+   perror("sem_init err\n");
+   exit(0);
+  }
+}
+
+void semRm(semid sem){
+ int try =  sem_destroy(sem);
+ if(try==-1){
+   perror("sem_destroy err\n");
+   exit(0);
+  }
+}
+
+void semP(semid sem){
+ int try = sem_wait(sem);
+ if(try==-1){
+   perror("sem_wait err\n");
+   exit(0);
+  }
+}
+
+void semV(semid sem){
+ int try = sem_post(sem);
+ if(try==-1){
+   perror("sem_post err\n");
+   exit(0);
+  }
+}
+
+void semZ(semid sem){ 
+ int* sval;
+ do{
+   sleep(1);
+   int try = sem_getvalue(sem,sval);
+   if(try==-1){
+   perror("sem_getvalue err\n");
+   exit(0);
+  }
+ } while(*sval!=0);
+}
+
+void semInfo(semid sem){
+ int* sval;
+ int try = sem_getvalue(sem,sval);
+   if(try==-1){
+   perror("sem_getvalue err\n");
+   exit(0);
+  }
+ if(*sval>=0) printf("sem_value: %d\n", *sval);
+ if(*sval<0) printf("number of postponed processes: %d\n", *sval);
+}
+
+
+
+
+   
+

@@ -1,0 +1,22 @@
+#ifndef _SEM_LIB_
+#define _SEM_LIB_
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+#include "sem_lib.h"
+
+// stworzenie zbioru semaforow
+sem sem_create(const char *file, char p, int sem_count)
+{
+	key_t key = ftok(file,p);
+	return semget(key,sem_count,IPC_CREAT|0666);
+}
+
+// ustawienie wartosci semafora sem_num w zbiorze sem_id
+void set_val(sem sem_id, int sem_num, int val)
+{
+	semctl(sem_id, sem_num, SETVAL, val);
+}

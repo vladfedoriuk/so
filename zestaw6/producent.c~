@@ -1,0 +1,42 @@
+#include<stdio.h>
+#include<unistd.h>
+#include<stdlib.h>
+#include<fcntl.h>
+#include<sys/stat.h>
+#include<semaphore.h>
+#include"pthread.h"
+#include"sem.h"
+#include<string.h>
+#include"shm.h"
+#include<sys/mman.h> 
+#include<sys/types.h>
+
+#define N 30
+
+semid sem_prod,sem_kons;
+
+int main(int argc, char* argv[]){
+       printf("producent is working.\n");
+       sem_prod = semOpen("sem_prod");
+       sem_kons = semOpen("sem_kons");
+       int fd = shmOpen("shm");
+       cykliczny* ptr =shmMap(fd,sizeof(cykliczny));
+       int i;
+       FILE* f;
+           if((f=fopen("input.txt","r"))==NULL){
+             perror("Nie udalo sie otworzyc plik do czytania");
+             exit(EXIT_FAILURE);
+           }
+       
+       for(i=0;i<N;i++){
+         semP(sem_prod);
+         int d;
+         fscanf(f,"%d",&d);
+         ptr->buf[ptr->end] = d;
+         printf("Nadeslano %d\n",d);
+         ptr->end=(ptr->end+1)&(SIZE-1);
+         semV(sem_kons);
+       }
+  fclose(f);
+  return 0;
+}
