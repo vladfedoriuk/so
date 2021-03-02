@@ -1,0 +1,24 @@
+.PHONY: all clean
+
+all: macierzysty.x potomny.x
+
+procinfo.o: procinfo.c procinfo.h
+potomny.o: potomny.c procinfo.h
+potomny.x: potomny.o procinfo.o
+macierzysty.o: macierzysty.c procinfo.h
+macierzysty.x: macierzysty.o procinfo.o
+
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+%.x: %.o
+	$(CC) $(LDFLAGS) -o $@ $^
+
+clean:
+	$(RM) *.o *.x
+
+
+
+
+

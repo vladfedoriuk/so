@@ -1,0 +1,25 @@
+.PHONY: all clean
+
+all: main.x kopiuj.x
+
+procinfo.o: procinfo.c procinfo.h
+main.o: main.c procinfo.h
+main.x: main.o procinfo.o
+kopiuj.o: kopiuj.c
+kopiuj.x: kopiuj.o 
+
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+#laczy wszystkie .o w jeden plik wykonywalny
+%.x: %.o 
+	$(CC) $(LDFLAGS) -o $@ $^
+
+clean:
+	$(RM) *.o *.x 
+
+
+
+
+
